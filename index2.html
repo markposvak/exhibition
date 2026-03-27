@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ОДНА НА МИЛЛИОН</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --green: #CCFF00;
+      --black: #000;
+      --white: #fff;
+      --font: 'Inter', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #fff;
+      color: #000;
+      font-family: var(--font);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* =============================================
+       FLOATING GREEN DOT CURSOR
+    ============================================= */
+    #dot {
+      position: fixed;
+      width: 18px;
+      height: 18px;
+      background: var(--green);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease;
+      mix-blend-mode: multiply;
+    }
+
+    body:hover #dot {
+      opacity: 1;
+    }
+
+    /* =============================================
+       SCROLL REVEAL
+    ============================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(.16,1,.3,1), transform 0.8s cubic-bezier(.16,1,.3,1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
+    }
+
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.85);
+      transition: opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
+    }
+
+    .reveal-scale.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* stagger delay utilities */
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.35s; }
+    .delay-4 { transition-delay: 0.5s; }
+
+    /* =============================================
+       PHOTO PLACEHOLDER UTILITY
+    ============================================= */
+    .photo-placeholder {
+      background: #e8e8e8;
+      display: block;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .photo-placeholder::after {
+      content: attr(data-label);
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #aaa;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 12px;
+    }
+
+    /* =============================================
+       OPENING — HERO
+    ============================================= */
+    #hero {
+      background: #fff;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 5vw;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero .hero-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #000;
+      margin-bottom: 24px;
+    }
+
+    #hero .hero-title {
+      font-size: clamp(42px, 13vw, 140px);
+      font-weight: 900;
+      line-height: 0.9;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+      color: #000;
+    }
+
+    #hero .hero-title .accent-word {
+      color: var(--green);
+    }
+
+    #hero .hero-sub {
+      margin-top: 40px;
+      font-size: clamp(11px, 2vw, 16px);
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #000;
+      max-width: 380px;
+      line-height: 1.7;
+    }
+
+    #hero .hero-dot {
+      position: absolute;
+      bottom: 48px;
+      right: 8vw;
+      width: 90px;
+      height: 90px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    #hero .hero-year {
+      position: absolute;
+      bottom: 44px;
+      left: 5vw;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: #000;
+      opacity: 0.35;
+    }
+
+    /* vertical rule */
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: 10%;
+      right: 22vw;
+      width: 1px;
+      height: 35%;
+      background: #000;
+      opacity: 0.12;
+    }
+
+    /* =============================================
+       FLOW 1 — "ОНА"
+    ============================================= */
+    #flow1 {
+      background: #fff;
+      padding: 80px 0 100px;
+      position: relative;
+      overflow: visible;
+    }
+
+    .f1-ona {
+      font-size: clamp(120px, 38vw, 420px);
+      font-weight: 900;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: #000;
+      padding-left: 4vw;
+      position: relative;
+      z-index: 1;
+    }
+
+    .f1-photo-wrap {
+      position: absolute;
+      top: -20px;
+      right: -2vw;
+      width: clamp(180px, 42vw, 420px);
+      z-index: 2;
+      transform: rotate(2.5deg);
+    }
+
+    /* REPLACE photo inside .f1-photo-wrap */
+    .f1-photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      display: block;
+    }
+
+    .f1-universe {
+      padding-left: 4vw;
+      margin-top: 12px;
+      font-size: clamp(18px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .f1-universe .dash {
+      color: var(--green);
+      margin-right: 8px;
+    }
+
+    .f1-tiny {
+      padding-left: 4vw;
+      margin-top: 24px;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #000;
+      opacity: 0.45;
+      max-width: 260px;
+    }
+
+    /* vertical text strip left */
+    .f1-vertical {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+      transform-origin: left center;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #000;
+      opacity: 0.2;
+      white-space: nowrap;
+    }
+
+    /* =============================================
+       FLOW 2 — "КРАСОТА"
+    ============================================= */
+    #flow2 {
+      background: #fff;
+      padding: 60px 0 80px;
+      overflow: hidden;
+    }
+
+    .f2-bigword-wrap {
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .f2-bigword {
+      display: block;
+      font-size: 100px; /* overridden by JS */
+      font-weight: 900;
+      line-height: 0.88;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      color: #000;
+      white-space: nowrap;
+      padding: 0 4vw;
+    }
+
+    .f2-body {
+      display: grid;
+      grid-template-columns: 1fr;
+      padding: 60px 5vw 0;
+      gap: 32px;
+      position: relative;
+    }
+
+    @media (min-width: 700px) {
+      .f2-body {
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: start;
+      }
+    }
+
+    /* REPLACE: main photo in flow2 */
+    .f2-photo {
+      width: 100%;
+      aspect-ratio: 4/5;
+      display: block;
+    }
+
+    .f2-photo-caption {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #000;
+      opacity: 0.4;
+      margin-top: 10px;
+    }
+
+    .f2-text-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .f2-text-block .big-line {
+      font-size: clamp(28px, 6vw, 64px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      line-height: 0.95;
+    }
+
+    .f2-text-block .big-line .g {
+      color: var(--green);
+    }
+
+    .f2-text-block .body-copy {
+      margin-top: 28px;
+      font-size: clamp(12px, 1.8vw, 15px);
+      font-weight: 400;
+      line-height: 1.75;
+      color: #000;
+      max-width: 340px;
+    }
+
+    .f2-text-block .body-copy strong {
+      font-weight: 900;
+    }
+
+    .f2-offset-label {
+      margin-top: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    /* =============================================
+       FLOW 3 — Experimental typography
+    ============================================= */
+    #flow3 {
+      background: #fff;
+      padding: 80px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .f3-container {
+      padding: 0 5vw;
+      position: relative;
+    }
+
+    /* "Когда" — giant */
+    .f3-yee {
+      font-size: clamp(80px, 26vw, 280px);
+      font-weight: 900;
+      line-height: 0.82;
+      letter-spacing: -0.05em;
+      color: #000;
+      display: block;
+      margin-left: -1vw;
+    }
+
+    /* "ты рядом" — medium green */
+    .f3-ulibka {
+      font-size: clamp(32px, 9vw, 96px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-left: 8vw;
+      margin-top: -8px;
+      display: block;
+    }
+
+    /* "мир замирает" — small rotated */
+    .f3-menyaet {
+      font-size: clamp(16px, 4vw, 42px);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      color: #000;
+      display: inline-block;
+      transform: rotate(-4deg);
+      margin-left: 48%;
+      margin-top: 16px;
+    }
+
+    /* photo interrupt */
+    .f3-photo-interrupt {
+      margin: 40px 0 40px 22%;
+      width: clamp(160px, 48vw, 380px);
+      position: relative;
+    }
+
+    /* REPLACE: photo inside .f3-photo-interrupt */
+    .f3-photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      display: block;
+    }
+
+    .f3-photo-interrupt::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: -12px;
+      right: 12px;
+      bottom: 12px;
+      border: 2px dashed var(--green);
+      z-index: -1;
+    }
+
+    /* "и я — вместе с ним" — huge */
+    .f3-vsyo {
+      font-size: clamp(40px, 14vw, 150px);
+      font-weight: 900;
+      line-height: 0.88;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      color: #000;
+      margin-top: -20px;
+    }
+
+    .f3-vsyo .word-green {
+      color: var(--green);
+    }
+
+    .f3-postscript {
+      margin-top: 40px;
+      margin-left: 5vw;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #000;
+      opacity: 0.4;
+      max-width: 260px;
+      line-height: 1.8;
+    }
+
+    /* decorative slanted line */
+    #flow3::after {
+      content: '';
+      position: absolute;
+      top: 10%;
+      right: 5vw;
+      width: 1px;
+      height: 30%;
+      background: var(--green);
+      transform: rotate(20deg);
+      transform-origin: top right;
+    }
+
+    /* =============================================
+       FLOW 4 — TILT / GYROSCOPE PHOTO
+    ============================================= */
+    #flow4 {
+      background: #fff;
+      padding: 100px 5vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .f4-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #000;
+      opacity: 0.3;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .f4-tilt-wrap {
+      width: clamp(220px, 68vw, 520px);
+      position: relative;
+      will-change: transform;
+    }
+
+    /* REPLACE: tilt photo */
+    .f4-photo {
+      width: 100%;
+      aspect-ratio: 4/5;
+      display: block;
+    }
+
+    .f4-tilt-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border: 1.5px solid var(--green);
+      pointer-events: none;
+    }
+
+    .f4-caption {
+      margin-top: 36px;
+      font-size: clamp(22px, 6vw, 52px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .f4-caption .g { color: var(--green); }
+
+    .f4-gyro-note {
+      margin-top: 16px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #000;
+      opacity: 0.3;
+      text-align: center;
+    }
+
+    /* =============================================
+       FLOW 5 — ASYMMETRIC 2-COL
+    ============================================= */
+    #flow5 {
+      background: #fff;
+      padding: 80px 0 100px;
+      overflow: hidden;
+    }
+
+    .f5-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    @media (min-width: 700px) {
+      .f5-inner {
+        flex-direction: row;
+        align-items: stretch;
+      }
+    }
+
+    /* photo col — 60% */
+    .f5-photo-col {
+      position: relative;
+      flex: 0 0 60%;
+    }
+
+    /* REPLACE: asymmetric flow5 photo */
+    .f5-photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      display: block;
+    }
+
+    .f5-photo-col::after {
+      content: '';
+      position: absolute;
+      bottom: -16px;
+      left: 16px;
+      right: -16px;
+      top: 16px;
+      border: 2px dashed var(--green);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* text col */
+    .f5-text-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 5vw 48px 8vw;
+    }
+
+    .f5-stacked-words {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .f5-stacked-words .word {
+      font-size: clamp(36px, 10vw, 88px);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      color: #000;
+    }
+
+    .f5-stacked-words .word.green {
+      color: var(--green);
+    }
+
+    .f5-sub {
+      margin-top: 32px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #000;
+      opacity: 0.4;
+      max-width: 200px;
+      line-height: 1.8;
+    }
+
+    /* =============================================
+       CLOSING — BLACK
+    ============================================= */
+    #closing {
+      background: #000;
+      min-height: 60svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 80px 5vw;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .closing-main {
+      font-size: clamp(32px, 10vw, 110px);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .closing-sub {
+      margin-top: 36px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #fff;
+      opacity: 0.45;
+      max-width: 300px;
+      line-height: 1.9;
+    }
+
+    .closing-mark {
+      position: absolute;
+      bottom: 40px;
+      right: 5vw;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #fff;
+      opacity: 0.2;
+    }
+
+    /* big decorative green corner */
+    #closing::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 180px;
+      height: 180px;
+      background: var(--green);
+      border-radius: 50%;
+      opacity: 0.06;
+    }
+
+    /* =============================================
+       VERTICAL TEXT STRIP — left edge of whole page
+       (decorative, runs along flow1 left border)
+    ============================================= */
+    .page-vertical-strip {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .page-vertical-strip span {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #000;
+      opacity: 0.13;
+      white-space: nowrap;
+    }
+
+    /* =============================================
+       UTILITY
+    ============================================= */
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    section {
+      background: #fff;
+    }
+
+    #closing {
+      background: #000 !important;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       FLOATING GREEN DOT CURSOR
+  ============================================= -->
+  <div id="dot"></div>
+
+  <!-- =============================================
+       FIXED VERTICAL STRIP — left edge
+  ============================================= -->
+  <div class="page-vertical-strip">
+    <span>ОДНА НА МИЛЛИОН — 2026 — ПРИЗНАНИЕ</span>
+  </div>
+
+  <!-- =============================================
+       OPENING / HERO
+  ============================================= -->
+  <section id="hero">
+    <p class="hero-label reveal">Персональная экспозиция · 2026</p>
+    <h1 class="hero-title reveal delay-1">
+      ОД<span class="accent-word">НА</span><br />НА<br />МИЛ<span class="accent-word">ЛИ</span>ОН
+    </h1>
+    <p class="hero-sub reveal delay-2">
+      Посвящение той,<br />
+      без которой ничего не имеет смысла
+    </p>
+    <div class="hero-dot reveal delay-3">ЛИСТАЙ<br />ВНИЗ</div>
+    <span class="hero-year">© 2026</span>
+  </section>
+
+  <!-- =============================================
+       FLOW 1 — "ОНА" with overlapping photo
+  ============================================= -->
+  <section id="flow1">
+    <!-- Vertical strip text along left edge of this section -->
+    <div class="f1-vertical">ЛЮБОВЬ · НЕЖНОСТЬ · ТЕПЛО · МОЁВСЁ</div>
+
+    <!-- Giant "ОНА" -->
+    <div class="f1-ona reveal-left">ОНА</div>
+
+    <!-- Photo overlapping text, slightly rotated -->
+    <div class="f1-photo-wrap reveal delay-2">
+      <!-- REPLACE: portrait photo of subject, vertical 3:4 ratio -->
+      <div class="photo-placeholder f1-photo" data-label="REPLACE: портрет, формат 3:4, вертикальный"></div>
+    </div>
+
+    <!-- "— мой воздух, моя тишина" -->
+    <div class="f1-universe reveal delay-1">
+      <span class="dash">—</span>мой воздух, моя тишина
+    </div>
+    <p class="f1-tiny reveal delay-2">та, ради которой я просыпаюсь</p>
+  </section>
+
+  <!-- =============================================
+       FLOW 2 — "КРАСОТА" fullwidth + single photo
+  ============================================= -->
+  <section id="flow2">
+    <!-- Fullwidth fitted word — JS will resize -->
+    <div class="f2-bigword-wrap">
+      <span class="f2-bigword reveal" id="wordKrasota">КРАСОТА</span>
+    </div>
+
+    <div class="f2-body">
+      <!-- REPLACE: main photo flow2 -->
+      <div>
+        <div class="photo-placeholder f2-photo reveal-scale" data-label="REPLACE: фото, формат 4:5, портрет или крупный план"></div>
+        <p class="f2-photo-caption reveal delay-1">— лучший кадр —</p>
+      </div>
+
+      <!-- Text beside photo -->
+      <div class="f2-text-block">
+        <p class="big-line reveal delay-1">В КАЖ<span class="g">ДОМ</span><br />МГНО<br />ВЕНИИ</p>
+        <p class="body-copy reveal delay-2">
+          Ты не замечаешь, как красива. А я замечаю.
+          <strong>Каждый раз. Каждую секунду.</strong>
+          И мне этого мало.
+        </p>
+        <span class="f2-offset-label reveal delay-3">↳ бесконечно</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       FLOW 3 — Experimental poster typography
+  ============================================= -->
+  <section id="flow3">
+    <div class="f3-container">
+
+      <!-- Giant "Когда" -->
+      <span class="f3-yee reveal">Когда</span>
+
+      <!-- Medium green "ты рядом" -->
+      <span class="f3-ulibka reveal delay-1">ты рядом</span>
+
+      <!-- Small rotated "мир замирает" -->
+      <span class="f3-menyaet reveal delay-2">мир замирает</span>
+
+      <!-- Photo interrupting the text flow -->
+      <div class="f3-photo-interrupt reveal-scale delay-2">
+        <!-- REPLACE: mid-section photo, vertical, candid or smiling moment -->
+        <div class="photo-placeholder f3-photo" data-label="REPLACE: фото, формат 3:4, живой момент"></div>
+      </div>
+
+      <!-- "и я — вместе с ним" — huge -->
+      <div class="f3-vsyo reveal delay-1">
+        и я — <span class="word-green">вместе</span>
+      </div>
+
+      <p class="f3-postscript reveal delay-3">
+        я не знаю как объяснить.<br />
+        просто рядом с тобой всё иначе.
+      </p>
+
+    </div>
+  </section>
+
+  <!-- =============================================
+       FLOW 4 — TILT / GYROSCOPE PHOTO
+  ============================================= -->
+  <section id="flow4">
+    <p class="f4-label reveal">· наклони телефон · она везде ·</p>
+
+    <div class="f4-tilt-wrap reveal-scale" id="tiltWrap">
+      <!-- REPLACE: tilt photo — dramatic portrait or close-up -->
+      <div class="photo-placeholder f4-photo" data-label="REPLACE: фото для наклона, формат 4:5, выразительный портрет"></div>
+    </div>
+
+    <p class="f4-caption reveal delay-1">
+      СМОТРЮ<br />НА ТЕБЯ И <span class="g">ТЕРЯЮСЬ</span>
+    </p>
+    <p class="f4-gyro-note reveal delay-2">наклони телефон · она везде</p>
+  </section>
+
+  <!-- =============================================
+       FLOW 5 — ASYMMETRIC 2-COL with stacked words
+  ============================================= -->
+  <section id="flow5">
+    <div class="f5-inner">
+
+      <!-- 60% photo column -->
+      <div class="f5-photo-col reveal-scale">
+        <!-- REPLACE: full-height portrait, offset dashed green border -->
+        <div class="photo-placeholder f5-photo" data-label="REPLACE: портрет, формат 3:4, асимметричная колонка"></div>
+      </div>
+
+      <!-- 40% text column, stacked vertical words -->
+      <div class="f5-text-col">
+        <div class="f5-stacked-words">
+          <span class="word reveal delay-1">ВСЁ</span>
+          <span class="word green reveal delay-2">ЭТО</span>
+          <span class="word reveal delay-3">РА</span>
+          <span class="word reveal delay-4">ДИ</span>
+          <span class="word green reveal delay-4">ТЕБЯ</span>
+        </div>
+        <p class="f5-sub reveal delay-4">и я бы повторил это снова.<br />и снова. и снова.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =============================================
+       CLOSING — BLACK BACKGROUND
+  ============================================= -->
+  <section id="closing">
+    <p class="closing-main reveal">
+      С ЛЮБОВЬЮ,<br />НАВСЕГДА.
+    </p>
+    <p class="closing-sub reveal delay-2">
+      Ты — лучшее, что случилось со мной.<br />
+      Это не выставка. Это признание.
+    </p>
+    <span class="closing-mark">ОДНА НА МИЛЛИОН · 2026</span>
+  </section>
+
+  <!-- =============================================
+       JAVASCRIPT
+  ============================================= -->
+  <script>
+    /* -------------------------------------------
+       1. FLOATING GREEN DOT
+    ------------------------------------------- */
+    const dot = document.getElementById('dot');
+    let mx = -100, my = -100;
+    let cx = -100, cy = -100;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
+    });
+
+    document.addEventListener('touchmove', e => {
+      const t = e.touches[0];
+      mx = t.clientX;
+      my = t.clientY;
+    }, { passive: true });
+
+    function animateDot() {
+      cx += (mx - cx) * 0.18;
+      cy += (my - cy) * 0.18;
+      dot.style.left = cx + 'px';
+      dot.style.top = cy + 'px';
+      requestAnimationFrame(animateDot);
+    }
+    animateDot();
+
+    /* Enlarge on clickable elements */
+    document.querySelectorAll('a, button, [role="button"]').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        dot.style.width = '36px';
+        dot.style.height = '36px';
+      });
+      el.addEventListener('mouseleave', () => {
+        dot.style.width = '18px';
+        dot.style.height = '18px';
+      });
+    });
+
+    /* -------------------------------------------
+       2. SCROLL REVEAL (Intersection Observer)
+    ------------------------------------------- */
+    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-scale');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => observer.observe(el));
+
+    /* -------------------------------------------
+       3. FULLWIDTH WORD — JS FITTING (#wordKrasota)
+    ------------------------------------------- */
+    function fitWord(elId) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      const container = el.parentElement;
+      const available = container.offsetWidth;
+      // binary search for font-size
+      let lo = 20, hi = 800;
+      el.style.fontSize = hi + 'px';
+      while (hi - lo > 1) {
+        const mid = (lo + hi) / 2;
+        el.style.fontSize = mid + 'px';
+        if (el.scrollWidth <= available) {
+          lo = mid;
+        } else {
+          hi = mid;
+        }
+      }
+      el.style.fontSize = lo + 'px';
+    }
+
+    fitWord('wordKrasota');
+    window.addEventListener('resize', () => fitWord('wordKrasota'));
+
+    /* -------------------------------------------
+       4. GYROSCOPE / TILT EFFECT
+    ------------------------------------------- */
+    const tiltWrap = document.getElementById('tiltWrap');
+    let gyroEnabled = false;
+
+    function applyTilt(rx, ry) {
+      const maxDeg = 14;
+      const rxi = Math.max(-maxDeg, Math.min(maxDeg, rx));
+      const ryi = Math.max(-maxDeg, Math.min(maxDeg, ry));
+      tiltWrap.style.transform =
+        `perspective(800px) rotateX(${rxi}deg) rotateY(${ryi}deg) scale(1.03)`;
+    }
+
+    /* Desktop mouse tilt */
+    tiltWrap.addEventListener('mousemove', e => {
+      if (gyroEnabled) return;
+      const rect = tiltWrap.getBoundingClientRect();
+      const cx2 = rect.left + rect.width / 2;
+      const cy2 = rect.top + rect.height / 2;
+      const rx = -((e.clientY - cy2) / (rect.height / 2)) * 10;
+      const ry = ((e.clientX - cx2) / (rect.width / 2)) * 10;
+      applyTilt(rx, ry);
+    });
+
+    tiltWrap.addEventListener('mouseleave', () => {
+      if (gyroEnabled) return;
+      tiltWrap.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)';
+      tiltWrap.style.transition = 'transform 0.6s ease';
+      setTimeout(() => tiltWrap.style.transition = '', 600);
+    });
+
+    /* iOS gyroscope permission */
+    function startGyro() {
+      window.addEventListener('deviceorientation', e => {
+        const rx = (e.beta - 45) * 0.4;   // tilt front-back
+        const ry = e.gamma * 0.4;          // tilt left-right
+        applyTilt(rx, ry);
+      });
+      gyroEnabled = true;
+    }
+
+    if (window.DeviceOrientationEvent) {
+      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // iOS 13+ — needs user gesture
+        tiltWrap.addEventListener('click', () => {
+          DeviceOrientationEvent.requestPermission()
+            .then(state => { if (state === 'granted') startGyro(); })
+            .catch(console.error);
+        }, { once: true });
+      } else {
+        startGyro();
+      }
+    }
+
+  </script>
+
+</body>
+</html>
